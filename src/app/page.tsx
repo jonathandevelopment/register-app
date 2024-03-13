@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <>
-      <Navbar />
+      
       <main className=" flex min-h-screen flex-col items-center  p-24">
         <h1 className=" text-5xl py-10">App de Reservas</h1>
         {/* day classes */}
@@ -19,7 +19,9 @@ export default function Home() {
           <div className="flex flex-col gap-6">
             {clases.map((clase) => {
               return(
-                <div className="py-4  bg-slate-200">{clase}</div>
+                <div 
+                key={clase}
+                className="py-4  bg-slate-200">{clase}</div>
               )
             })}
           </div>
