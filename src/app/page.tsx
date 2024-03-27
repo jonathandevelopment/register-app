@@ -1,9 +1,20 @@
-"use client"
+
 import Image from "next/image";
 import Navbar from "./components/Navbar";
+import { createClient } from "../../utils/supabase/server"; 
+import { type User } from '@supabase/supabase-js'
+import { useCallback, useEffect, useState } from "react";
+import LogedDashboard from "./components/LogedDashboard";
 
 
 export default async function Home() {
+
+  const supabase = createClient()
+ 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   
   
   const clases = ['lucha', 'jiujitsu brasileño', 'kickboxing'];
@@ -14,10 +25,14 @@ export default async function Home() {
     <>
       
       <main className=" flex min-h-screen flex-col items-center  p-24">
-        <h1 className=" text-5xl py-10">App de Reservas</h1>
+        
+      <LogedDashboard user={user}/>
+      <div>{user?.email}</div>
+
         {/* day classes */}
 
         <div>
+        
           <div className=" text-5xl ">{`dia numero: ${currentDay}`}</div>
           <div className="flex flex-col gap-6">
             {clases.map((clase) => {
