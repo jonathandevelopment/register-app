@@ -27,7 +27,6 @@ export default async function Home() {
       <main className=" flex min-h-screen flex-col items-center  p-24">
         
       <LogedDashboard user={user}/>
-      <div>{user?.email}</div>
 
         {/* day classes */}
 

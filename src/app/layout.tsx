@@ -2,8 +2,14 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import { createClient } from "../../utils/supabase/server";
 
 const inter = Inter({ subsets: ["latin"] });
+const supabase = createClient()
+ 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
+        <Navbar user={user}/>
         {children}
         </body>
     </html>

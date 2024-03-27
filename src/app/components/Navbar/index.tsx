@@ -1,7 +1,9 @@
 "use client"
-import { Fragment } from 'react'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { type User } from '@supabase/supabase-js'
+import { createClient } from '../../../../utils/supabase/client'
 
 const navigation = [
   { name: 'Dashboard', href: '/', current: true },
@@ -14,7 +16,47 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Navbar() {
+
+
+export default function Navbar({ user }: { user: User | null }) {
+
+  const supabase = createClient()
+  const [loading, setLoading] = useState(true)
+  const [name, setname] = useState<string | null>(null)
+  const [avatar_url, setAvatarUrl] = useState<string | null>(null)
+
+  const getProfile = useCallback(async () => {
+    try {
+      setLoading(true)
+
+      const { data, error, status } = await supabase
+        .from('profiles')
+        .select(`name, lastname, website, avatar_url`)
+        .eq('id', user?.id)
+        .single()
+
+      if (error && status !== 406) {
+        console.log(error)
+        throw error
+      }
+
+      if (data) {
+        setname(data.name)
+        setAvatarUrl(data.avatar_url)
+      }
+    } catch (error) {
+      alert('Error loading user data from navbar!')
+    } finally {
+      setLoading(false)
+    }
+  }, [user, supabase])
+
+  useEffect(() => {
+    getProfile()
+  }, [user, getProfile])
+
+  console.log(`url: ${avatar_url}`)
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -70,9 +112,10 @@ export default function Navbar() {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src={avatar_url || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'}
                         alt=""
                       />
+                      <div className='text-white ml-2'>{name}</div>
                     </Menu.Button>
                   </div>
                   <Transition

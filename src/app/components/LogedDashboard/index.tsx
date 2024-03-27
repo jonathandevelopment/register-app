@@ -49,7 +49,10 @@ export default function LogedDashboard({ user }: { user: User | null }) {
 
     return (<>
         <h1 className=" text-5xl py-10">App de Reservas</h1>
-        <h1 className=" text-5xl py-10">{`Bienvenido ${name}`} </h1>
+        {user && (
+            <h1 className=" text-5xl py-10">{`Bienvenido ${name}`} </h1>
+        )  }
+        
     </>)
 
 }
