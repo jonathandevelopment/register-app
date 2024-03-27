@@ -63,14 +63,14 @@ export default function Avatar({
   }
 
   return (
-    <div>
+    <div className='flex flex-col justify-center items-center '>
       {avatarUrl ? (
         <Image
           width={size}
           height={size}
           src={avatarUrl}
           alt="Avatar"
-          className="avatar image"
+          className="avatar image rounded-full object-cover "
           style={{ height: size, width: size }}
         />
       ) : (

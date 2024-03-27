@@ -75,7 +75,8 @@ export default function AccountForm({ user }: { user: User | null }) {
   }
 
   return (
-    <div className="form-widget">
+    <div className="mx-auto max-w-lg p-8 bg-gray-300 shadow-lg rounded-lg my-10">
+    <div className="text-center mb-8">
         <Avatar
             uid={user?.id ?? null}
             url={avatar_url}
@@ -84,56 +85,62 @@ export default function AccountForm({ user }: { user: User | null }) {
                 setAvatarUrl(url)
                 updateProfile({ name, lastname, website, avatar_url: url })
             }}
-            />
-      <div>
-        <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={user?.email} disabled />
-      </div>
-      <div>
-        <label htmlFor="name">Full Name</label>
-        <input
-          id="name"
-          type="text"
-          value={name || ''}
-          onChange={(e) => setname(e.target.value)}
         />
-      </div>
-      <div>
-        <label htmlFor="lastname">lastname</label>
-        <input
-          id="lastname"
-          type="text"
-          value={lastname || ''}
-          onChange={(e) => setlastname(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="website">Website</label>
-        <input
-          id="website"
-          type="url"
-          value={website || ''}
-          onChange={(e) => setWebsite(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <button
-          className="button primary block"
-          onClick={() => updateProfile({ name, lastname, website, avatar_url })}
-          disabled={loading}
-        >
-          {loading ? 'Loading ...' : 'Update'}
-        </button>
-      </div>
-
-      <div>
-        <form action="/auth/signout" method="post">
-          <button className="button block" type="submit">
-            Sign out
-          </button>
-        </form>
-      </div>
     </div>
+    <div className="mb-4">
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+        <input id="email" type="text" value={user?.email} disabled className="mt-1 p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"/>
+    </div>
+    <div className="mb-4">
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
+        <input
+            id="name"
+            type="text"
+            value={name || ''}
+            onChange={(e) => setname(e.target.value)}
+            className="mt-1 p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        />
+    </div>
+    <div className="mb-4">
+        <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">Last Name</label>
+        <input
+            id="lastname"
+            type="text"
+            value={lastname || ''}
+            onChange={(e) => setlastname(e.target.value)}
+            className="mt-1 p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        />
+    </div>
+    <div className="mb-4">
+        <label htmlFor="website" className="block text-sm font-medium text-gray-700">Website</label>
+        <input
+            id="website"
+            type="url"
+            value={website || ''}
+            onChange={(e) => setWebsite(e.target.value)}
+            className="mt-1 p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        />
+    </div>
+
+    <div className="text-center">
+        <button
+            className="button primary w-full"
+            onClick={() => updateProfile({ name, lastname, website, avatar_url })}
+            disabled={loading}
+        >
+            {loading ? 'Loading ...' : 'Update'}
+        </button>
+    </div>
+
+    <div className="text-center mt-4">
+        <form action="/auth/signout" method="post">
+            <button className="button w-full" type="submit">
+                Sign out
+            </button>
+        </form>
+    </div>
+</div>
+
+
   )
 }
