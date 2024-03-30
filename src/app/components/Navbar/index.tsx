@@ -7,16 +7,6 @@ import { createClient } from '../../../../utils/supabase/client'
 import Avatar from './avatar'
 import Link from 'next/link'
 
-const navigation = [
-  { name: 'Reservas', href: '/', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Perfil de Atleta', href: '#', current: false },
-  { name: 'Calendario', href: '#', current: false },
-]
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export default function Navbar({ user }: { user: User | null }) {
 
@@ -24,7 +14,8 @@ export default function Navbar({ user }: { user: User | null }) {
   const [loading, setLoading] = useState(true)
   const [name, setname] = useState<string | null>(null)
   const [avatar_url, setAvatarUrl] = useState<string | null>(null)
-
+ 
+  
   const getProfile = useCallback(async () => {
     try {
       setLoading(true)
@@ -45,7 +36,7 @@ export default function Navbar({ user }: { user: User | null }) {
         setAvatarUrl(data.avatar_url)
       }
     } catch (error) {
-      alert('Error loading user data from navbar!')
+      console.warn('Error loading user data from navbar!')
     } finally {
       setLoading(false)
     }
@@ -54,6 +45,17 @@ export default function Navbar({ user }: { user: User | null }) {
   useEffect(() => {
     getProfile()
   }, [user, getProfile])
+
+  const navigation = [
+    { name: 'Reservas', href: '/', current: true },
+    { name: 'Team', href: '#', current: false },
+    { name: 'Perfil de Atleta', href: `${user ? "/account" : "/login"}`, current: false },
+    { name: 'Calendario', href: '#', current: false },
+  ]
+  
+  function classNames(...classes: string[]) {
+    return classes.filter(Boolean).join(' ')
+  }
 
 
   return (
@@ -85,7 +87,7 @@ export default function Navbar({ user }: { user: User | null }) {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <a
+                      <Link
                         key={item.name}
                         href={item.href}
                         className={classNames(
@@ -95,14 +97,18 @@ export default function Navbar({ user }: { user: User | null }) {
                         aria-current={item.current ? 'page' : undefined}
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                
-              <a href='/sign-in'className="bg-gray-900 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Sign in </a>
+             
+                <Link href='/login'
+                className="bg-gray-900 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">
+                  Sign in </Link>
+              
+              
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
@@ -110,15 +116,18 @@ export default function Navbar({ user }: { user: User | null }) {
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                      
-                      <Avatar
-                          uid={user?.id ?? null}
-                          url={avatar_url}
-                          size={50}
-                          onUpload={(url) => {
-                              setAvatarUrl(url)
-                              // updateProfile({ name, lastname, website, avatar_url: url })
-                          }}
+                      
+                        <Avatar
+                        uid={user?.id ?? null}
+                        url={avatar_url}
+                        size={50}
+                        onUpload={(url) => {
+                          setAvatarUrl(url)
+                          // updateProfile({ name, lastname, website, avatar_url: url })
+                        }}
                       />
+                        
+
                     </Menu.Button>
                   </div>
                   <Transition
@@ -143,12 +152,13 @@ export default function Navbar({ user }: { user: User | null }) {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Sign out
-                          </a>
+                          <div className="text-center mt-4">
+                            <form action="/auth/signout" method="post">
+                                <button className="button w-full" type="submit">
+                                    Sign out
+                                </button>
+                            </form>
+                        </div>
                         )}
                       </Menu.Item>
                     </Menu.Items>

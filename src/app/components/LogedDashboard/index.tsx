@@ -36,7 +36,7 @@ export default function LogedDashboard({ user }: { user: User | null }) {
             setAvatarUrl(data.avatar_url)
           }
         } catch (error) {
-          alert('Error loading user data!')
+          console.warn('Error loading user data!')
         } finally {
           setLoading(false)
         }
